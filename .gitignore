@@ -12,6 +12,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Placeholder icon
+Color Picker Unlimited/color-picker-icon.ico
+
 # Build results
 bin/*
 [Dd]ebug/

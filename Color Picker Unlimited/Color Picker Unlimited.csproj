@@ -10,11 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="DarkTheme.xaml" />
+    <Page Remove="LightTheme.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="color-picker-icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="DarkTheme.xaml" />
+    <Resource Include="LightTheme.xaml" />
   </ItemGroup>
 
 </Project>

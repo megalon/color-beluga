@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.Drawing;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Color_Picker_Unlimited
 {
@@ -129,14 +130,40 @@ namespace Color_Picker_Unlimited
             }
         }
 
-        private void Option1_Click(object sender, RoutedEventArgs e)
+        private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Option 1 clicked");
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.Owner = this;
+            settingsWindow.ShowDialog();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+        public void SwitchTheme(string theme)
+        {
+            ResourceDictionary newTheme;
+
+            if (theme == "Dark")
+            {
+                newTheme = new ResourceDictionary
+                {
+                    Source = new Uri("DarkTheme.xaml", UriKind.Relative)
+                };
+            }
+            else
+            {
+                newTheme = new ResourceDictionary
+                {
+                    Source = new Uri("LightTheme.xaml", UriKind.Relative)
+                };
+            }
+
+            this.Resources.MergedDictionaries.Clear();
+            this.Resources.MergedDictionaries.Add(newTheme);
+        }
+
     }
 }

@@ -7,16 +7,16 @@
         mc:Ignorable="d"
         WindowStyle="None" ResizeMode="NoResize" Topmost="True"
         Title="MainWindow" Height="40" Width="200">
-    <Grid Background="Transparent" MouseDown="Grid_MouseDown">
+    <Grid x:Name="MainGrid" Background="{DynamicResource WindowBackgroundBrush}" MouseDown="Grid_MouseDown">
         <Grid.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Settings" Click="Option1_Click"/>
+                <MenuItem Header="Settings" Click="Settings_Click"/>
                 <Separator />
                 <MenuItem Header="Exit" Click="Exit_Click"/>
             </ContextMenu>
         </Grid.ContextMenu>
-        <TextBlock x:Name="ColorName" HorizontalAlignment="Left" Margin="10,4,0,0" TextWrapping="Wrap" Text="Color Name" VerticalAlignment="Top" FontWeight="Bold"/>
-        <TextBlock x:Name="ColorInfo" HorizontalAlignment="Left" Margin="10,18,0,0" TextWrapping="Wrap" Text="R: 100 G: 100 B: 100" VerticalAlignment="Top"/>
+        <TextBlock x:Name="ColorName" Foreground="{DynamicResource TextForegroundBrush}" HorizontalAlignment="Left" Margin="10,4,0,0" TextWrapping="Wrap" Text="Color Name" VerticalAlignment="Top" FontWeight="Bold"/>
+        <TextBlock x:Name="ColorInfo" Foreground="{DynamicResource TextForegroundBrush}" HorizontalAlignment="Left" Margin="10,18,0,0" TextWrapping="Wrap" Text="R: 100 G: 100 B: 100" VerticalAlignment="Top"/>
         <Rectangle x:Name="ColorBox" HorizontalAlignment="Left" Height="64" Margin="125,0,0,0" Stroke="Black" VerticalAlignment="Center" Width="71" Fill="Red" RenderTransformOrigin="1.254,0.406"/>
     </Grid>
 </Window>
