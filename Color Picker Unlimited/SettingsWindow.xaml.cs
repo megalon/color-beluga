@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,30 @@ namespace Color_Picker_Unlimited
 
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var mainWindow = this.Owner as MainWindow;
+            MainWindow? mainWindow = this.Owner as MainWindow;
             if (mainWindow != null)
             {
                 string selectedTheme = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
                 mainWindow.SwitchTheme(selectedTheme);
+            }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MainWindow? mainWindow = this.Owner as MainWindow;
+
+            if (mainWindow == null)
+            {
+                Debug.WriteLine("Owner is null! Could not find mainWindow!");
+                return;
+            }
+
+            TextBox textBox = (TextBox)sender;
+
+            string text = textBox.Text;
+
+            if(int.TryParse(text, out int result)) {
+                mainWindow.SetTimerInterval(result);
             }
         }
     }

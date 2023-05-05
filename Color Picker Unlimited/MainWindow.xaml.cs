@@ -62,8 +62,17 @@ namespace Color_Picker_Unlimited
             }
 
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(16); // Adjust this value for the desired refresh rate
+            _timer.Interval = TimeSpan.FromMilliseconds(16);
             _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }
+
+        public void SetTimerInterval(int ms)
+        {
+            if (ms < 0) ms = 0;
+
+            _timer.Stop();
+            _timer.Interval = TimeSpan.FromMilliseconds(ms);
             _timer.Start();
         }
 
@@ -101,9 +110,23 @@ namespace Color_Picker_Unlimited
 
             ColorBox.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
 
+            string closestColorName = GetClosestColorName(color);
+
+            closestColorName = Regex.Replace(closestColorName, @"(\p{Lu})(\p{Ll})", " $1$2");
+
+            // Remove the leading space
+            if (closestColorName.Length > 0 && closestColorName[0] == ' ')
+            {
+                closestColorName = closestColorName[1..];
+            }
+
+            ColorName.Text = closestColorName;
+        }
+
+        private string GetClosestColorName(System.Drawing.Color color)
+        {
             double minDistance = double.MaxValue;
             string closestColorName = "NONE";
-
             foreach (KeyValuePair<string, System.Drawing.Color> namedColor in ColorNames)
             {
                 double distance = Math.Sqrt(
@@ -119,15 +142,9 @@ namespace Color_Picker_Unlimited
                 }
             }
 
-            closestColorName = Regex.Replace(closestColorName, @"(\p{Lu})(\p{Ll})", " $1$2");
+            if (closestColorName.Equals("Transparent")) return "White";
 
-            // Remove the leading space
-            if (closestColorName.Length > 0 && closestColorName[0] == ' ')
-            {
-                closestColorName = closestColorName[1..];
-            }
-
-            ColorName.Text = closestColorName;
+            return closestColorName;
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
