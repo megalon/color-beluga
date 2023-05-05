@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,19 +24,42 @@ namespace Color_Picker_Unlimited
         public SettingsWindow()
         {
             InitializeComponent();
+
+            RefreshRateTextBox.Text = "" + Settings.Default.RefreshRate;
+
+            SetThemeComboBox(Settings.Default.Theme);
         }
 
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MainWindow? mainWindow = this.Owner as MainWindow;
-            if (mainWindow != null)
+
+            if (mainWindow == null)
             {
-                string selectedTheme = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
-                mainWindow.SwitchTheme(selectedTheme);
+                return;
+            }
+
+            string selectedTheme = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
+
+            Collection<ResourceDictionary> newTheme = mainWindow.SwitchTheme(selectedTheme);
+
+            ApplyThemes(newTheme);
+
+            Settings.Default.Theme = selectedTheme;
+            Settings.Default.Save();
+        }
+
+        public void ApplyThemes(Collection<ResourceDictionary> themes)
+        {
+            this.Resources.MergedDictionaries.Clear();
+
+            foreach(ResourceDictionary theme in themes)
+            {
+                this.Resources.MergedDictionaries.Add(theme);
             }
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void RefreshRateTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             MainWindow? mainWindow = this.Owner as MainWindow;
 
@@ -49,8 +73,24 @@ namespace Color_Picker_Unlimited
 
             string text = textBox.Text;
 
-            if(int.TryParse(text, out int result)) {
+            if(double.TryParse(text, out double result)) {
                 mainWindow.SetTimerInterval(result);
+
+                // Save the selected theme to the settings
+                Settings.Default.RefreshRate = result;
+                Settings.Default.Save();
+            }
+        }
+
+        private void SetThemeComboBox(string theme)
+        {
+            foreach (ComboBoxItem item in ThemeComboBox.Items)
+            {
+                if (item.Content.ToString() == theme)
+                {
+                    ThemeComboBox.SelectedItem = item;
+                    break;
+                }
             }
         }
     }

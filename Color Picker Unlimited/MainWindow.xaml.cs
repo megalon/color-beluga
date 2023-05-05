@@ -18,6 +18,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 
 namespace Color_Picker_Unlimited
 {
@@ -53,6 +54,8 @@ namespace Color_Picker_Unlimited
         {
             InitializeComponent();
 
+            LoadTheme();
+
             ColorNames = new Dictionary<string, System.Drawing.Color>();
             foreach (var color in typeof(Colors).GetRuntimeProperties())
             {
@@ -62,12 +65,12 @@ namespace Color_Picker_Unlimited
             }
 
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(16);
+            _timer.Interval = TimeSpan.FromMilliseconds(16.67);
             _timer.Tick += Timer_Tick;
             _timer.Start();
         }
 
-        public void SetTimerInterval(int ms)
+        public void SetTimerInterval(double ms)
         {
             if (ms < 0) ms = 0;
 
@@ -159,6 +162,7 @@ namespace Color_Picker_Unlimited
         {
             SettingsWindow settingsWindow = new SettingsWindow();
             settingsWindow.Owner = this;
+            settingsWindow.ApplyThemes(this.Resources.MergedDictionaries);
             settingsWindow.ShowDialog();
         }
 
@@ -167,7 +171,7 @@ namespace Color_Picker_Unlimited
             this.Close();
         }
 
-        public void SwitchTheme(string theme)
+        public Collection<ResourceDictionary> SwitchTheme(string theme)
         {
             ResourceDictionary newTheme;
 
@@ -188,7 +192,12 @@ namespace Color_Picker_Unlimited
 
             this.Resources.MergedDictionaries.Clear();
             this.Resources.MergedDictionaries.Add(newTheme);
+            return this.Resources.MergedDictionaries;
         }
 
+        private void LoadTheme()
+        {
+            SwitchTheme(Settings.Default.Theme);
+        }
     }
 }
