@@ -119,6 +119,14 @@ namespace Color_Picker_Unlimited
                 }
             }
 
+            closestColorName = Regex.Replace(closestColorName, @"(\p{Lu})(\p{Ll})", " $1$2");
+
+            // Remove the leading space
+            if (closestColorName.Length > 0 && closestColorName[0] == ' ')
+            {
+                closestColorName = closestColorName[1..];
+            }
+
             ColorName.Text = closestColorName;
         }
 
