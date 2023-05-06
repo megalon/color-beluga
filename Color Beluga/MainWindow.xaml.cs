@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Threading;
 using System.Drawing;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace Color_Beluga
 {
@@ -89,7 +83,8 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            UpdateColorInfo();
+            //UpdateColorInfo();
+            UpdateClonedPixelsImage();
             TopmostCheck();
         }
 
@@ -114,6 +109,7 @@ namespace Color_Beluga
 
             return System.Drawing.Color.FromArgb(r, g, b);
         }
+
         private void UpdateColorInfo()
         {
             System.Drawing.Color color = GetColorUnderCursor();
@@ -204,6 +200,41 @@ namespace Color_Beluga
         private void LoadTheme()
         {
             SwitchTheme(Settings.Default.Theme);
+        }
+
+        private void UpdateClonedPixelsImage()
+        {
+            GetCursorPos(out POINT cursorPos);
+
+            // Convert the WPF point to a System.Drawing.Point
+            System.Drawing.Point screenPoint = new System.Drawing.Point((int)cursorPos.X, (int)cursorPos.Y);
+
+            int size = 5;
+
+            using (Bitmap screenshot = new Bitmap(size, size, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                using (Graphics g = Graphics.FromImage(screenshot))
+                {
+                    g.CopyFromScreen(screenPoint.X - (size/2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
+                }
+
+                // Convert the System.Drawing.Bitmap to a WPF BitmapImage.
+                BitmapImage bitmapImage;
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    screenshot.Save(memoryStream, ImageFormat.Bmp);
+                    memoryStream.Position = 0;
+                    bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memoryStream;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze(); // Necessary for cross-thread operations.
+                }
+
+                // Update the Image control
+                ClonedPixelsImage.Source = bitmapImage;
+            }
         }
     }
 }
