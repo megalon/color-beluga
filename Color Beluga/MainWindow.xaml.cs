@@ -83,7 +83,7 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //UpdateColorInfo();
+            //UpdateColorInfo(GetColorUnderCursor());
             UpdateClonedPixelsImage();
             TopmostCheck();
         }
@@ -110,9 +110,8 @@ namespace Color_Beluga
             return System.Drawing.Color.FromArgb(r, g, b);
         }
 
-        private void UpdateColorInfo()
+        private void UpdateColorInfo(System.Drawing.Color color)
         {
-            System.Drawing.Color color = GetColorUnderCursor();
             ColorInfo.Text = $"R: {color.R} G: {color.G} B: {color.B}";
 
             ColorBox.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
@@ -234,7 +233,36 @@ namespace Color_Beluga
 
                 // Update the Image control
                 ClonedPixelsImage.Source = bitmapImage;
+
+                // Update the color text
+                UpdateColorInfo(GetAverageColorOfBitmap(screenshot));
             }
+        }
+
+        public static System.Drawing.Color GetAverageColorOfBitmap(Bitmap bitmap)
+        {
+            long sumR = 0;
+            long sumG = 0;
+            long sumB = 0;
+            long pixelCount = bitmap.Width * bitmap.Height;
+            System.Drawing.Color pixelColor = System.Drawing.Color.White;
+
+            for (int y = 0; y < bitmap.Height; ++y)
+            {
+                for (int x = 0; x < bitmap.Width; ++x)
+                {
+                    pixelColor = bitmap.GetPixel(x, y);
+                    sumR += pixelColor.R;
+                    sumG += pixelColor.G;
+                    sumB += pixelColor.B;
+                }
+            }
+
+            return System.Drawing.Color.FromArgb(
+                (int)(sumR / pixelCount),
+                (int)(sumG / pixelCount),
+                (int)(sumB / pixelCount)
+            );
         }
     }
 }
