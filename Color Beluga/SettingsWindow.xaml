@@ -25,6 +25,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Grid.Row="0"
@@ -52,6 +53,14 @@
                 <ComboBoxItem>Light</ComboBoxItem>
                 <ComboBoxItem>Dark</ComboBoxItem>
             </ComboBox>
+            <Label Grid.Column="0" Grid.Row="2"
+                   Content="Version"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource TextForegroundBrush}"/>
+            <Label x:Name="VersionLabel" Grid.Column="1" Grid.Row="2"
+                   Content="Version"
+                   HorizontalAlignment="Left"
+                   Foreground="{DynamicResource TextForegroundBrush}"/>
         </Grid>
     </Grid>
 </Window>
