@@ -57,11 +57,19 @@ namespace Color_Picker_Unlimited
             LoadTheme();
 
             ColorNames = new Dictionary<string, System.Drawing.Color>();
+
             foreach (var color in typeof(Colors).GetRuntimeProperties())
             {
                 System.Windows.Media.Color mediaColor = (System.Windows.Media.Color)color.GetValue(null);
                 System.Drawing.Color drawingColor = System.Drawing.Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
-                ColorNames[color.Name] = drawingColor;
+
+                if (color.Name.Equals("Transparent"))
+                {
+                    ColorNames["White"] = drawingColor;
+                } else
+                {
+                    ColorNames[color.Name] = drawingColor;
+                }
             }
 
             _timer = new DispatcherTimer();
@@ -129,7 +137,7 @@ namespace Color_Picker_Unlimited
         private string GetClosestColorName(System.Drawing.Color color)
         {
             double minDistance = double.MaxValue;
-            string closestColorName = "NONE";
+            string closestColorName = "";
             foreach (KeyValuePair<string, System.Drawing.Color> namedColor in ColorNames)
             {
                 double distance = Math.Sqrt(
@@ -144,8 +152,6 @@ namespace Color_Picker_Unlimited
                     closestColorName = namedColor.Key;
                 }
             }
-
-            if (closestColorName.Equals("Transparent")) return "White";
 
             return closestColorName;
         }
