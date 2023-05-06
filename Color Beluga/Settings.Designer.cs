@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Color_Picker_Unlimited {
+namespace Color_Beluga {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

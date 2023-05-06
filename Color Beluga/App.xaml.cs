@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Color_Picker_Unlimited
+namespace Color_Beluga
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>Color_Picker_Unlimited</RootNamespace>
+    <RootNamespace>Color_Beluga</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>color-picker-icon.ico</ApplicationIcon>

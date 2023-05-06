@@ -20,7 +20,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 
-namespace Color_Picker_Unlimited
+namespace Color_Beluga
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
