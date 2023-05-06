@@ -9,12 +9,12 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Content="Settings" FontWeight="Bold"
-                   Foreground="{DynamicResource TextForegroundBrush}" HorizontalAlignment="Center" />
+        <Label Grid.Row="0" Content="Color Beluga" FontWeight="Bold"
+                   Foreground="{DynamicResource TextForegroundBrush}" HorizontalAlignment="Center" FontSize="22" />
         
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
