@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Color_Beluga
 {
@@ -44,11 +45,15 @@ namespace Color_Beluga
 
         private DispatcherTimer _timer;
 
+        private int _imageSize;
+
         public MainWindow()
         {
             InitializeComponent();
 
             LoadTheme();
+
+            _imageSize = 4;
 
             ColorNames = new Dictionary<string, System.Drawing.Color>();
 
@@ -67,7 +72,7 @@ namespace Color_Beluga
             }
 
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(16.67);
+            _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
             _timer.Tick += Timer_Tick;
             _timer.Start();
         }
@@ -113,8 +118,6 @@ namespace Color_Beluga
         private void UpdateColorInfo(System.Drawing.Color color)
         {
             ColorInfo.Text = $"R: {color.R} G: {color.G} B: {color.B}";
-
-            ColorBox.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
 
             string closestColorName = GetClosestColorName(color);
 
@@ -208,7 +211,7 @@ namespace Color_Beluga
             // Convert the WPF point to a System.Drawing.Point
             System.Drawing.Point screenPoint = new System.Drawing.Point((int)cursorPos.X, (int)cursorPos.Y);
 
-            int size = 5;
+            int size = _imageSize;
 
             using (Bitmap screenshot = new Bitmap(size, size, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             {
@@ -235,34 +238,31 @@ namespace Color_Beluga
                 ClonedPixelsImage.Source = bitmapImage;
 
                 // Update the color text
-                UpdateColorInfo(GetAverageColorOfBitmap(screenshot));
+                UpdateColorInfo(Utils.GetAverageColorOfBitmap(screenshot));
             }
         }
 
-        public static System.Drawing.Color GetAverageColorOfBitmap(Bitmap bitmap)
+        private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            long sumR = 0;
-            long sumG = 0;
-            long sumB = 0;
-            long pixelCount = bitmap.Width * bitmap.Height;
-            System.Drawing.Color pixelColor = System.Drawing.Color.White;
+            // Make the image bigger to zoom out
+            int maxDimension = 64;
+            _imageSize *= 2;
 
-            for (int y = 0; y < bitmap.Height; ++y)
+            if (_imageSize > maxDimension)
             {
-                for (int x = 0; x < bitmap.Width; ++x)
-                {
-                    pixelColor = bitmap.GetPixel(x, y);
-                    sumR += pixelColor.R;
-                    sumG += pixelColor.G;
-                    sumB += pixelColor.B;
-                }
+                _imageSize = maxDimension;
             }
+        }
 
-            return System.Drawing.Color.FromArgb(
-                (int)(sumR / pixelCount),
-                (int)(sumG / pixelCount),
-                (int)(sumB / pixelCount)
-            );
+        private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            // Make the image smaller to zoom in
+            _imageSize /= 2;
+
+            if (_imageSize < 1)
+            {
+                _imageSize = 1;
+            }
         }
     }
 }

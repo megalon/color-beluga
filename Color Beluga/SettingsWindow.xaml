@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Color_Beluga"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="200" Width="300">
+        Title="Settings" Height="200" Width="300">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
 
         <Grid.RowDefinitions>
