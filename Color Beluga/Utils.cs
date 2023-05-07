@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AForge.Imaging.Filters;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +10,14 @@ namespace Color_Beluga
 {
     internal static class Utils
     {
+        public static Bitmap ApplyGaussianBlur(Bitmap source, int kernelSize = 20, double sigma = 10)
+        {
+            GaussianBlur gaussianBlur = new GaussianBlur(sigma, kernelSize);
+            Bitmap blurredBitmap = gaussianBlur.Apply(source);
+
+            return blurredBitmap;
+        }
+
         public static System.Drawing.Color GetAverageColorOfBitmap(Bitmap bitmap)
         {
             long sumR = 0;

@@ -88,7 +88,6 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //UpdateColorInfo(GetColorUnderCursor());
             UpdateClonedPixelsImage();
             TopmostCheck();
         }
@@ -217,14 +216,16 @@ namespace Color_Beluga
             {
                 using (Graphics g = Graphics.FromImage(screenshot))
                 {
-                    g.CopyFromScreen(screenPoint.X - (size/2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
+                    g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
                 }
+
+                Bitmap blurredScreenshot = Utils.ApplyGaussianBlur(screenshot);
 
                 // Convert the System.Drawing.Bitmap to a WPF BitmapImage.
                 BitmapImage bitmapImage;
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    screenshot.Save(memoryStream, ImageFormat.Bmp);
+                    blurredScreenshot.Save(memoryStream, ImageFormat.Bmp);
                     memoryStream.Position = 0;
                     bitmapImage = new BitmapImage();
                     bitmapImage.BeginInit();
@@ -238,7 +239,7 @@ namespace Color_Beluga
                 ClonedPixelsImage.Source = bitmapImage;
 
                 // Update the color text
-                UpdateColorInfo(Utils.GetAverageColorOfBitmap(screenshot));
+                UpdateColorInfo(Utils.GetAverageColorOfBitmap(blurredScreenshot));
             }
         }
 
