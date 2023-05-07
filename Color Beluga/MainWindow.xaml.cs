@@ -95,7 +95,7 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            short keyState = GetAsyncKeyState(VK_LCONTROL);
+            short keyState = GetAsyncKeyState(VK_ALT);
 
             // Check if the key is being pressed
             if ((keyState & 0x8000) != 0)
