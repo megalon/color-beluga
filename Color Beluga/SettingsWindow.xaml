@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Color_Beluga"
         mc:Ignorable="d"
-        Title="Settings" Height="200" Width="300">
+        Title="Color Beluga" Height="200" Width="300">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
 
         <Grid.RowDefinitions>
@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Content="Color Beluga" FontWeight="Bold"
+        <Label Grid.Row="0" Content="SETTINGS" FontWeight="Bold"
                    Foreground="{DynamicResource TextForegroundBrush}" HorizontalAlignment="Center" FontSize="22" />
         
         <Grid Grid.Row="1">
