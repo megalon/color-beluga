@@ -18,6 +18,32 @@ namespace Color_Beluga
             return blurredBitmap;
         }
 
+        public static Color GetMedianColorOfBitmap(Bitmap bitmap)
+        {
+            List<int> rList = new List<int>();
+            List<int> gList = new List<int>();
+            List<int> bList = new List<int>();
+
+            for (int y = 0; y < bitmap.Height; ++y)
+            {
+                for (int x = 0; x < bitmap.Width; ++x)
+                {
+                    Color pixelColor = bitmap.GetPixel(x, y);
+                    rList.Add(pixelColor.R);
+                    gList.Add(pixelColor.G);
+                    bList.Add(pixelColor.B);
+                }
+            }
+
+            rList.Sort();
+            gList.Sort();
+            bList.Sort();
+
+            int medianIndex = rList.Count / 2;
+
+            return Color.FromArgb(rList[medianIndex], gList[medianIndex], bList[medianIndex]);
+        }
+
         public static System.Drawing.Color GetAverageColorOfBitmap(Bitmap bitmap)
         {
             long sumR = 0;

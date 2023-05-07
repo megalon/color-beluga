@@ -239,7 +239,7 @@ namespace Color_Beluga
                 ClonedPixelsImage.Source = bitmapImage;
 
                 // Update the color text
-                UpdateColorInfo(Utils.GetAverageColorOfBitmap(blurredScreenshot));
+                UpdateColorInfo(Utils.GetMedianColorOfBitmap(blurredScreenshot));
             }
         }
 
