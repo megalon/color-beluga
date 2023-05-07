@@ -22,5 +22,6 @@
         </Border>
         <Button x:Name="ButtonZoomOut" Width="20" Content="-" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Click="ButtonZoomOut_Click" FontWeight="Bold"/>
         <Button x:Name="ButtonZoomIn" Width="20" Content="+" HorizontalAlignment="Left" Margin="35,40,0,0" VerticalAlignment="Top" Click="ButtonZoomIn_Click" FontWeight="Bold"/>
+        <CheckBox x:Name="CheckBoxBlur" Foreground="{DynamicResource TextForegroundBrush}" Content="Blur" HorizontalAlignment="Left" Margin="59,45,0,0" VerticalAlignment="Top" Click="CheckBoxBlur_Click"/>
     </Grid>
 </Window>

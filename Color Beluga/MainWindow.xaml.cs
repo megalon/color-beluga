@@ -53,6 +53,7 @@ namespace Color_Beluga
 
         private int _imageSize;
         private POINT _cursorPos;
+        private bool _blur;
 
         public MainWindow()
         {
@@ -61,6 +62,7 @@ namespace Color_Beluga
             LoadTheme();
 
             _imageSize = 4;
+            _blur = false;
 
             ColorNames = new Dictionary<string, System.Drawing.Color>();
 
@@ -232,28 +234,37 @@ namespace Color_Beluga
                     g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
                 }
 
-                Bitmap blurredScreenshot = Utils.ApplyGaussianBlur(screenshot);
-
-                // Convert the System.Drawing.Bitmap to a WPF BitmapImage.
-                BitmapImage bitmapImage;
-                using (MemoryStream memoryStream = new MemoryStream())
+                if (_blur)
                 {
-                    blurredScreenshot.Save(memoryStream, ImageFormat.Bmp);
-                    memoryStream.Position = 0;
-                    bitmapImage = new BitmapImage();
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = memoryStream;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-                    bitmapImage.Freeze(); // Necessary for cross-thread operations.
+                    UpdateImageAndColorInfo(Utils.ApplyGaussianBlur(screenshot));
+                }else
+                {
+                    UpdateImageAndColorInfo(screenshot);
                 }
-
-                // Update the Image control
-                ClonedPixelsImage.Source = bitmapImage;
-
-                // Update the color text
-                UpdateColorInfo(Utils.GetMedianColorOfBitmap(blurredScreenshot));
             }
+        }
+
+        private void UpdateImageAndColorInfo(Bitmap screenshot)
+        {
+            // Convert the System.Drawing.Bitmap to a WPF BitmapImage.
+            BitmapImage bitmapImage;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                screenshot.Save(memoryStream, ImageFormat.Bmp);
+                memoryStream.Position = 0;
+                bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze(); // Necessary for cross-thread operations.
+            }
+
+            // Update the Image control
+            ClonedPixelsImage.Source = bitmapImage;
+
+            // Update the color text
+            UpdateColorInfo(Utils.GetMedianColorOfBitmap(screenshot));
         }
 
         private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
@@ -277,6 +288,13 @@ namespace Color_Beluga
             {
                 _imageSize = 1;
             }
+        }
+
+        private void CheckBoxBlur_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.CheckBox? checkBox = sender as System.Windows.Controls.CheckBox;
+
+            _blur = (bool)checkBox.IsChecked;
         }
     }
 }
