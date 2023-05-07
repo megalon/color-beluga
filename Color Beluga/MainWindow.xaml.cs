@@ -43,9 +43,16 @@ namespace Color_Beluga
             public int Y;
         }
 
+        [DllImport("user32.dll")]
+        static extern short GetAsyncKeyState(int vKey);
+
+        const int VK_ALT = 0x12;
+        const int VK_LCONTROL = 0xA2;
+
         private DispatcherTimer _timer;
 
         private int _imageSize;
+        private POINT _cursorPos;
 
         public MainWindow()
         {
@@ -88,6 +95,14 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            short keyState = GetAsyncKeyState(VK_LCONTROL);
+
+            // Check if the key is being pressed
+            if ((keyState & 0x8000) != 0)
+            {
+                GetCursorPos(out _cursorPos);
+            }
+
             UpdateClonedPixelsImage();
             TopmostCheck();
         }
@@ -205,10 +220,8 @@ namespace Color_Beluga
 
         private void UpdateClonedPixelsImage()
         {
-            GetCursorPos(out POINT cursorPos);
-
             // Convert the WPF point to a System.Drawing.Point
-            System.Drawing.Point screenPoint = new System.Drawing.Point((int)cursorPos.X, (int)cursorPos.Y);
+            System.Drawing.Point screenPoint = new System.Drawing.Point((int)_cursorPos.X, (int)_cursorPos.Y);
 
             int size = _imageSize;
 
