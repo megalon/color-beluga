@@ -6,7 +6,7 @@
   "ADD8E6": "Light Blue",
   "E6E6FA": "Light Purple",
   "D2B48C": "Light Brown",
-  
+
   "FF0000": "Red",
   "FFA500": "Orange",
   "FFFF00": "Yellow",
@@ -14,7 +14,7 @@
   "0000FF": "Blue",
   "800080": "Purple",
   "A52A2A": "Brown",
-  
+
   "8B0000": "Dark Red",
   "FF8C00": "Dark Orange",
   "FFD700": "Dark Yellow",
@@ -24,6 +24,8 @@
   "8B4513": "Dark Brown",
 
   "FFFFFF": "White",
+  "AAAAAA": "Light Gray",
   "888888": "Gray",
+  "333333": "Dark Gray",
   "000000": "Black"
 }

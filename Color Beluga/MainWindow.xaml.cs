@@ -14,6 +14,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using ColorMine.ColorSpaces.Comparisons;
+using ColorMine.ColorSpaces;
 
 namespace Color_Beluga
 {
@@ -160,13 +162,15 @@ namespace Color_Beluga
         {
             double minDistance = double.MaxValue;
             string closestColorName = "";
+            CieDe2000Comparison comparer = new CieDe2000Comparison();
+
+            Rgb queryColor = new Rgb { R = color.R, G = color.G, B = color.B };
+
             foreach (KeyValuePair<System.Drawing.Color, string> namedColor in ColorNames)
             {
-                double distance = Math.Sqrt(
-                    Math.Pow(namedColor.Key.R - color.R, 2) +
-                    Math.Pow(namedColor.Key.G - color.G, 2) +
-                    Math.Pow(namedColor.Key.B - color.B, 2)
-                );
+                Rgb namedRgb = new Rgb { R = namedColor.Key.R, G = namedColor.Key.G, B = namedColor.Key.B };
+
+                double distance = queryColor.Compare(namedRgb, comparer);
 
                 if (distance < minDistance)
                 {
