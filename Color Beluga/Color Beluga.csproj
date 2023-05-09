@@ -3,25 +3,26 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Color_Beluga</RootNamespace>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
     <ApplicationIcon>color-beluga-logo2.ico</ApplicationIcon>
     <Version>0.1.0.0</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Page Remove="DarkTheme.xaml" />
-    <Page Remove="LightTheme.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="color-beluga-logo2.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="DarkTheme.xaml" />
-    <Resource Include="LightTheme.xaml" />
+    <PackageReference Include="AForge.Imaging" Version="2.2.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\colors.json" />
   </ItemGroup>
 
   <ItemGroup>

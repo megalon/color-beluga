@@ -1,24 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Threading;
 using System.Drawing;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Color_Beluga
 {
@@ -48,7 +43,17 @@ namespace Color_Beluga
             public int Y;
         }
 
+        [DllImport("user32.dll")]
+        static extern short GetAsyncKeyState(int vKey);
+
+        const int VK_ALT = 0x12;
+        const int VK_LCONTROL = 0xA2;
+
         private DispatcherTimer _timer;
+
+        private int _imageSize;
+        private POINT _cursorPos;
+        private bool _blur;
 
         public MainWindow()
         {
@@ -56,6 +61,19 @@ namespace Color_Beluga
 
             LoadTheme();
 
+            LoadDefaultColornames();
+
+            _imageSize = 4;
+            _blur = false;
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }
+
+        private void LoadDefaultColornames()
+        {
             ColorNames = new Dictionary<string, System.Drawing.Color>();
 
             foreach (var color in typeof(Colors).GetRuntimeProperties())
@@ -66,16 +84,12 @@ namespace Color_Beluga
                 if (color.Name.Equals("Transparent"))
                 {
                     ColorNames["White"] = drawingColor;
-                } else
+                }
+                else
                 {
                     ColorNames[color.Name] = drawingColor;
                 }
             }
-
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(16.67);
-            _timer.Tick += Timer_Tick;
-            _timer.Start();
         }
 
         public void SetTimerInterval(double ms)
@@ -89,7 +103,15 @@ namespace Color_Beluga
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            UpdateColorInfo();
+            short keyState = GetAsyncKeyState(VK_ALT);
+
+            // Check if the key is being pressed
+            //if ((keyState & 0x8000) != 0)
+            //{
+            GetCursorPos(out _cursorPos);
+            //}
+
+            UpdateClonedPixelsImage();
             TopmostCheck();
         }
 
@@ -114,12 +136,10 @@ namespace Color_Beluga
 
             return System.Drawing.Color.FromArgb(r, g, b);
         }
-        private void UpdateColorInfo()
-        {
-            System.Drawing.Color color = GetColorUnderCursor();
-            ColorInfo.Text = $"R: {color.R} G: {color.G} B: {color.B}";
 
-            ColorBox.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B));
+        private void UpdateColorInfo(System.Drawing.Color color)
+        {
+            ColorInfo.Text = $"R: {color.R} G: {color.G} B: {color.B}";
 
             string closestColorName = GetClosestColorName(color);
 
@@ -185,14 +205,14 @@ namespace Color_Beluga
             {
                 newTheme = new ResourceDictionary
                 {
-                    Source = new Uri("DarkTheme.xaml", UriKind.Relative)
+                    Source = new Uri("Themes/DarkTheme.xaml", UriKind.Relative)
                 };
             }
             else
             {
                 newTheme = new ResourceDictionary
                 {
-                    Source = new Uri("LightTheme.xaml", UriKind.Relative)
+                    Source = new Uri("Themes/LightTheme.xaml", UriKind.Relative)
                 };
             }
 
@@ -204,6 +224,83 @@ namespace Color_Beluga
         private void LoadTheme()
         {
             SwitchTheme(Settings.Default.Theme);
+        }
+
+        private void UpdateClonedPixelsImage()
+        {
+            // Convert the WPF point to a System.Drawing.Point
+            System.Drawing.Point screenPoint = new System.Drawing.Point((int)_cursorPos.X, (int)_cursorPos.Y);
+
+            int size = _imageSize;
+
+            using (Bitmap screenshot = new Bitmap(size, size, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                using (Graphics g = Graphics.FromImage(screenshot))
+                {
+                    g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
+                }
+
+                if (_blur)
+                {
+                    UpdateImageAndColorInfo(Utils.ApplyGaussianBlur(screenshot));
+                }else
+                {
+                    UpdateImageAndColorInfo(screenshot);
+                }
+            }
+        }
+
+        private void UpdateImageAndColorInfo(Bitmap screenshot)
+        {
+            // Convert the System.Drawing.Bitmap to a WPF BitmapImage.
+            BitmapImage bitmapImage;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                screenshot.Save(memoryStream, ImageFormat.Bmp);
+                memoryStream.Position = 0;
+                bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze(); // Necessary for cross-thread operations.
+            }
+
+            // Update the Image control
+            ClonedPixelsImage.Source = bitmapImage;
+
+            // Update the color text
+            UpdateColorInfo(Utils.GetMedianColorOfBitmap(screenshot));
+        }
+
+        private void ButtonZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            // Make the image bigger to zoom out
+            int maxDimension = 64;
+            _imageSize *= 2;
+
+            if (_imageSize > maxDimension)
+            {
+                _imageSize = maxDimension;
+            }
+        }
+
+        private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            // Make the image smaller to zoom in
+            _imageSize /= 2;
+
+            if (_imageSize < 1)
+            {
+                _imageSize = 1;
+            }
+        }
+
+        private void CheckBoxBlur_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.CheckBox? checkBox = sender as System.Windows.Controls.CheckBox;
+
+            _blur = (bool)checkBox.IsChecked;
         }
     }
 }
