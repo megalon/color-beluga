@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Threading;
 using System.Drawing;
@@ -14,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Color_Beluga
 {
@@ -61,9 +61,19 @@ namespace Color_Beluga
 
             LoadTheme();
 
+            LoadDefaultColornames();
+
             _imageSize = 4;
             _blur = false;
 
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }
+
+        private void LoadDefaultColornames()
+        {
             ColorNames = new Dictionary<string, System.Drawing.Color>();
 
             foreach (var color in typeof(Colors).GetRuntimeProperties())
@@ -74,16 +84,12 @@ namespace Color_Beluga
                 if (color.Name.Equals("Transparent"))
                 {
                     ColorNames["White"] = drawingColor;
-                } else
+                }
+                else
                 {
                     ColorNames[color.Name] = drawingColor;
                 }
             }
-
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
-            _timer.Tick += Timer_Tick;
-            _timer.Start();
         }
 
         public void SetTimerInterval(double ms)
@@ -100,10 +106,10 @@ namespace Color_Beluga
             short keyState = GetAsyncKeyState(VK_ALT);
 
             // Check if the key is being pressed
-            if ((keyState & 0x8000) != 0)
-            {
-                GetCursorPos(out _cursorPos);
-            }
+            //if ((keyState & 0x8000) != 0)
+            //{
+            GetCursorPos(out _cursorPos);
+            //}
 
             UpdateClonedPixelsImage();
             TopmostCheck();
@@ -199,14 +205,14 @@ namespace Color_Beluga
             {
                 newTheme = new ResourceDictionary
                 {
-                    Source = new Uri("DarkTheme.xaml", UriKind.Relative)
+                    Source = new Uri("Themes/DarkTheme.xaml", UriKind.Relative)
                 };
             }
             else
             {
                 newTheme = new ResourceDictionary
                 {
-                    Source = new Uri("LightTheme.xaml", UriKind.Relative)
+                    Source = new Uri("Themes/LightTheme.xaml", UriKind.Relative)
                 };
             }
 

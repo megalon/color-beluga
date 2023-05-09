@@ -12,22 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="DarkTheme.xaml" />
-    <Page Remove="LightTheme.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="color-beluga-logo2.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AForge.Imaging" Version="2.2.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="DarkTheme.xaml" />
-    <Resource Include="LightTheme.xaml" />
+    <Resource Include="Resources\colors.json" />
   </ItemGroup>
 
   <ItemGroup>
