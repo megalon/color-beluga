@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\colors.json" />
+    <EmbeddedResource Include="Resources\colors.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

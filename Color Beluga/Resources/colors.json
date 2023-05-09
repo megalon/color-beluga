@@ -1,0 +1,29 @@
+{
+  "FFC0CB": "Light Red",
+  "FFA07A": "Light Orange",
+  "FFFFE0": "Light Yellow",
+  "90EE90": "Light Green",
+  "ADD8E6": "Light Blue",
+  "E6E6FA": "Light Purple",
+  "D2B48C": "Light Brown",
+  
+  "FF0000": "Red",
+  "FFA500": "Orange",
+  "FFFF00": "Yellow",
+  "008000": "Green",
+  "0000FF": "Blue",
+  "800080": "Purple",
+  "A52A2A": "Brown",
+  
+  "8B0000": "Dark Red",
+  "FF8C00": "Dark Orange",
+  "FFD700": "Dark Yellow",
+  "006400": "Dark Green",
+  "00008B": "Dark Blue",
+  "4B0082": "Dark Purple",
+  "8B4513": "Dark Brown",
+
+  "FFFFFF": "White",
+  "888888": "Gray",
+  "000000": "Black"
+}
