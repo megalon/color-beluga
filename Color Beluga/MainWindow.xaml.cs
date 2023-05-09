@@ -84,7 +84,7 @@ namespace Color_Beluga
             {
                 System.Windows.Media.Color mediaColor = (System.Windows.Media.Color)color.GetValue(null);
                 System.Drawing.Color drawingColor = System.Drawing.Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
-
+                
                 if (color.Name.Equals("Transparent"))
                 {
                     ColorNames[drawingColor] = "White";
