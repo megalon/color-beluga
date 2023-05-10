@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -239,20 +239,29 @@ namespace Color_Beluga
 
             int size = _imageSize;
 
-            using (Bitmap screenshot = new Bitmap(size, size, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            try
             {
-                using (Graphics g = Graphics.FromImage(screenshot))
+                using (Bitmap screenshot = new Bitmap(size, size, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
                 {
-                    g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
-                }
+                    using (Graphics g = Graphics.FromImage(screenshot))
+                    {
+                        g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
+                    }
 
-                if (_blur)
-                {
-                    UpdateImageAndColorInfo(Utils.ApplyGaussianBlur(screenshot));
-                }else
-                {
-                    UpdateImageAndColorInfo(screenshot);
+                    if (_blur)
+                    {
+                        UpdateImageAndColorInfo(Utils.ApplyGaussianBlur(screenshot));
+                    }
+                    else
+                    {
+                        UpdateImageAndColorInfo(screenshot);
+                    }
                 }
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                // Catch special case where context is lost because computer is locked, then unlocked
+                Debug.WriteLine(ex.Message);
             }
         }
 
