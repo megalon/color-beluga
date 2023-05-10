@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -12,8 +12,10 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Windows.Forms;
+using Newtonsoft.Json;
 using System.Diagnostics;
+using ColorMine.ColorSpaces.Comparisons;
+using ColorMine.ColorSpaces;
 
 namespace Color_Beluga
 {
@@ -34,7 +36,7 @@ namespace Color_Beluga
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
 
-        private Dictionary<string, System.Drawing.Color> ColorNames;
+        private Dictionary<System.Drawing.Color, string> ColorNames;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
@@ -61,7 +63,11 @@ namespace Color_Beluga
 
             LoadTheme();
 
-            LoadDefaultColornames();
+            ColorNames = new Dictionary<System.Drawing.Color, string>();
+
+            LoadColorDataJSON();
+
+            //LoadDefaultColornames();
 
             _imageSize = 4;
             _blur = false;
@@ -74,20 +80,18 @@ namespace Color_Beluga
 
         private void LoadDefaultColornames()
         {
-            ColorNames = new Dictionary<string, System.Drawing.Color>();
-
             foreach (var color in typeof(Colors).GetRuntimeProperties())
             {
                 System.Windows.Media.Color mediaColor = (System.Windows.Media.Color)color.GetValue(null);
                 System.Drawing.Color drawingColor = System.Drawing.Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
-
+                
                 if (color.Name.Equals("Transparent"))
                 {
-                    ColorNames["White"] = drawingColor;
+                    ColorNames[drawingColor] = "White";
                 }
                 else
                 {
-                    ColorNames[color.Name] = drawingColor;
+                    ColorNames[drawingColor] = color.Name;
                 }
             }
         }
@@ -158,18 +162,20 @@ namespace Color_Beluga
         {
             double minDistance = double.MaxValue;
             string closestColorName = "";
-            foreach (KeyValuePair<string, System.Drawing.Color> namedColor in ColorNames)
+            CieDe2000Comparison comparer = new CieDe2000Comparison();
+
+            Rgb queryColor = new Rgb { R = color.R, G = color.G, B = color.B };
+
+            foreach (KeyValuePair<System.Drawing.Color, string> namedColor in ColorNames)
             {
-                double distance = Math.Sqrt(
-                    Math.Pow(namedColor.Value.R - color.R, 2) +
-                    Math.Pow(namedColor.Value.G - color.G, 2) +
-                    Math.Pow(namedColor.Value.B - color.B, 2)
-                );
+                Rgb namedRgb = new Rgb { R = namedColor.Key.R, G = namedColor.Key.G, B = namedColor.Key.B };
+
+                double distance = queryColor.Compare(namedRgb, comparer);
 
                 if (distance < minDistance)
                 {
                     minDistance = distance;
-                    closestColorName = namedColor.Key;
+                    closestColorName = namedColor.Value;
                 }
             }
 
@@ -301,6 +307,21 @@ namespace Color_Beluga
             System.Windows.Controls.CheckBox? checkBox = sender as System.Windows.Controls.CheckBox;
 
             _blur = (bool)checkBox.IsChecked;
+        }
+
+        public void LoadColorDataJSON()
+        {
+            string resourceName = "Color_Beluga.Resources.colors.json";
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            StreamReader reader = new StreamReader(stream);
+            string json = reader.ReadToEnd();
+
+            Dictionary<string, string> colorDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+            foreach (var kvp in colorDictionary)
+            {
+                ColorNames.Add(ColorTranslator.FromHtml("#FF" + kvp.Key), kvp.Value);
+            }
         }
     }
 }
