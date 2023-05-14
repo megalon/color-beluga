@@ -63,7 +63,7 @@ namespace Color_Beluga
 
             ColorNames = new Dictionary<System.Drawing.Color, string>();
 
-            LoadColorDataJSON();
+            LoadColorDataResourceJSON("Color_Beluga.Resources.Simple-Names.json");
 
             //LoadDefaultColornames();
 
@@ -315,9 +315,8 @@ namespace Color_Beluga
             Settings.Default.BlurEnabled = (bool)checkBox.IsChecked;
         }
 
-        public void LoadColorDataJSON()
+        public void LoadColorDataResourceJSON(string resourceName)
         {
-            string resourceName = "Color_Beluga.Resources.colors.json";
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
             StreamReader reader = new StreamReader(stream);
             string json = reader.ReadToEnd();
