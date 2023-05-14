@@ -13,5 +13,15 @@ namespace Color_Beluga
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            Application.Current.Exit += OnApplicationExit;
+        }
+
+        private void OnApplicationExit(object sender, ExitEventArgs e)
+        {
+            Settings.Default.Save();
+        }
     }
 }
