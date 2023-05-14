@@ -12,10 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Simple-Names.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="color-beluga-logo2.ico" />
   </ItemGroup>
 

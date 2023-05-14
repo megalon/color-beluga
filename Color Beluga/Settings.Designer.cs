@@ -70,5 +70,17 @@ namespace Color_Beluga {
                 this["BlurEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Standard")]
+        public string ColorSet {
+            get {
+                return ((string)(this["ColorSet"]));
+            }
+            set {
+                this["ColorSet"] = value;
+            }
+        }
     }
 }

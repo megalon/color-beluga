@@ -28,10 +28,10 @@ namespace Color_Beluga
 
             RefreshRateTextBox.Text = "" + Settings.Default.RefreshRate;
 
-            SetThemeComboBox(Settings.Default.Theme);
+            SetComboBoxSelection(Settings.Default.Theme, ThemeComboBox);
+            SetComboBoxSelection(Settings.Default.ColorSet, ColorSetComboBox);
 
             VersionLabel.Content = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
         }
 
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -86,16 +86,40 @@ namespace Color_Beluga
             }
         }
 
-        private void SetThemeComboBox(string theme)
+        public void SetComboBoxSelection(string selection, ComboBox comboBox)
         {
-            foreach (ComboBoxItem item in ThemeComboBox.Items)
+            foreach (ComboBoxItem item in comboBox.Items)
             {
-                if (item.Content.ToString() == theme)
+                if (item.Content.ToString() == selection)
                 {
-                    ThemeComboBox.SelectedItem = item;
+                    comboBox.SelectedItem = item;
                     break;
                 }
             }
+        }
+
+        private void ColorSetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MainWindow? mainWindow = this.Owner as MainWindow;
+
+            if (mainWindow == null)
+            {
+                return;
+            }
+
+            string selectedColorSet = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
+
+            try
+            {
+                mainWindow.LoadColorDataResourceJSON(selectedColorSet);
+            } catch(Exception ex)
+            {
+                Debug.WriteLine("Error loading color set! " + ex.Message);
+                return;
+            }
+
+            Settings.Default.ColorSet = selectedColorSet;
+            Settings.Default.Save();
         }
     }
 }
