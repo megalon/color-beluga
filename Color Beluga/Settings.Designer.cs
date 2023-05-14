@@ -46,5 +46,29 @@ namespace Color_Beluga {
                 this["RefreshRate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("64")]
+        public int ImageSize {
+            get {
+                return ((int)(this["ImageSize"]));
+            }
+            set {
+                this["ImageSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BlurEnabled {
+            get {
+                return ((bool)(this["BlurEnabled"]));
+            }
+            set {
+                this["BlurEnabled"] = value;
+            }
+        }
     }
 }

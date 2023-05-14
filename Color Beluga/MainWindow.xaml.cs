@@ -53,9 +53,7 @@ namespace Color_Beluga
 
         private DispatcherTimer _timer;
 
-        private int _imageSize;
         private POINT _cursorPos;
-        private bool _blur;
 
         public MainWindow()
         {
@@ -69,8 +67,7 @@ namespace Color_Beluga
 
             //LoadDefaultColornames();
 
-            _imageSize = 4;
-            _blur = false;
+            CheckBoxBlur.IsChecked = Settings.Default.BlurEnabled;
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
@@ -237,7 +234,7 @@ namespace Color_Beluga
             // Convert the WPF point to a System.Drawing.Point
             System.Drawing.Point screenPoint = new System.Drawing.Point((int)_cursorPos.X, (int)_cursorPos.Y);
 
-            int size = _imageSize;
+            int size = Settings.Default.ImageSize;
 
             try
             {
@@ -248,7 +245,7 @@ namespace Color_Beluga
                         g.CopyFromScreen(screenPoint.X - (size / 2), screenPoint.Y - (size / 2), 0, 0, new System.Drawing.Size(size, size), CopyPixelOperation.SourceCopy);
                     }
 
-                    if (_blur)
+                    if (Settings.Default.BlurEnabled)
                     {
                         UpdateImageAndColorInfo(Utils.ApplyGaussianBlur(screenshot));
                     }
@@ -292,22 +289,22 @@ namespace Color_Beluga
         {
             // Make the image bigger to zoom out
             int maxDimension = 64;
-            _imageSize *= 2;
+            Settings.Default.ImageSize *= 2;
 
-            if (_imageSize > maxDimension)
+            if (Settings.Default.ImageSize > maxDimension)
             {
-                _imageSize = maxDimension;
+                Settings.Default.ImageSize = maxDimension;
             }
         }
 
         private void ButtonZoomIn_Click(object sender, RoutedEventArgs e)
         {
             // Make the image smaller to zoom in
-            _imageSize /= 2;
+            Settings.Default.ImageSize /= 2;
 
-            if (_imageSize < 1)
+            if (Settings.Default.ImageSize < 1)
             {
-                _imageSize = 1;
+                Settings.Default.ImageSize = 1;
             }
         }
 
@@ -315,7 +312,7 @@ namespace Color_Beluga
         {
             System.Windows.Controls.CheckBox? checkBox = sender as System.Windows.Controls.CheckBox;
 
-            _blur = (bool)checkBox.IsChecked;
+            Settings.Default.BlurEnabled = (bool)checkBox.IsChecked;
         }
 
         public void LoadColorDataJSON()
