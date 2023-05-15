@@ -19,9 +19,6 @@ using ColorMine.ColorSpaces;
 
 namespace Color_Beluga
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
@@ -63,9 +60,7 @@ namespace Color_Beluga
 
             ColorNames = new Dictionary<System.Drawing.Color, string>();
 
-            LoadColorDataJSON();
-
-            //LoadDefaultColornames();
+            LoadColorDataResourceJSON("Standard");
 
             CheckBoxBlur.IsChecked = Settings.Default.BlurEnabled;
 
@@ -73,24 +68,6 @@ namespace Color_Beluga
             _timer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshRate);
             _timer.Tick += Timer_Tick;
             _timer.Start();
-        }
-
-        private void LoadDefaultColornames()
-        {
-            foreach (var color in typeof(Colors).GetRuntimeProperties())
-            {
-                System.Windows.Media.Color mediaColor = (System.Windows.Media.Color)color.GetValue(null);
-                System.Drawing.Color drawingColor = System.Drawing.Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
-                
-                if (color.Name.Equals("Transparent"))
-                {
-                    ColorNames[drawingColor] = "White";
-                }
-                else
-                {
-                    ColorNames[drawingColor] = color.Name;
-                }
-            }
         }
 
         public void SetTimerInterval(double ms)
@@ -315,12 +292,22 @@ namespace Color_Beluga
             Settings.Default.BlurEnabled = (bool)checkBox.IsChecked;
         }
 
-        public void LoadColorDataJSON()
+        public void LoadColorDataResourceJSON(string resourceName)
         {
-            string resourceName = "Color_Beluga.Resources.colors.json";
+            if (resourceName.Equals("Standard"))
+            {
+                resourceName = "Color_Beluga.Resources.Standard.json";
+            }
+            else if (resourceName.Equals("Standard (Simple Names)"))
+            {
+                resourceName = "Color_Beluga.Resources.Simple-Names.json";
+            }
+
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
             StreamReader reader = new StreamReader(stream);
             string json = reader.ReadToEnd();
+
+            ColorNames.Clear();
 
             Dictionary<string, string> colorDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
 

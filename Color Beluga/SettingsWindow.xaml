@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Color_Beluga"
         mc:Ignorable="d"
-        Title="Color Beluga" Height="200" Width="300">
+        Title="Color Beluga" Height="215" Width="300">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
 
         <Grid.RowDefinitions>
@@ -26,6 +26,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Grid.Row="0"
@@ -33,7 +34,15 @@
                    HorizontalAlignment="Right"
                    Foreground="{DynamicResource TextForegroundBrush}"/>
             <Label Grid.Column="0" Grid.Row="1"
+                   Content="Color Set"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource TextForegroundBrush}"/>
+            <Label Grid.Column="0" Grid.Row="2"
                    Content="Theme"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource TextForegroundBrush}"/>
+            <Label Grid.Column="0" Grid.Row="3"
+                   Content="Version"
                    HorizontalAlignment="Right"
                    Foreground="{DynamicResource TextForegroundBrush}"/>
 
@@ -45,19 +54,24 @@
                     TextChanged="RefreshRateTextBox_TextChanged"
                     HorizontalAlignment="Left" MaxLines="1"/>
             <ComboBox Grid.Column="1" Grid.Row="1"
-                      x:Name="ThemeComboBox"
+                      x:Name="ColorSetComboBox"
                       HorizontalAlignment="Left"
                       Width="94" 
+                      Height="25"
+                      SelectionChanged="ColorSetComboBox_SelectionChanged">
+                <ComboBoxItem>Standard</ComboBoxItem>
+                <ComboBoxItem>Standard (Simple Names)</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Grid.Column="1" Grid.Row="2"
+                      x:Name="ThemeComboBox"
+                      HorizontalAlignment="Left"
+                      Width="94"
                       Height="25"
                       SelectionChanged="ThemeComboBox_SelectionChanged">
                 <ComboBoxItem>Light</ComboBoxItem>
                 <ComboBoxItem>Dark</ComboBoxItem>
             </ComboBox>
-            <Label Grid.Column="0" Grid.Row="2"
-                   Content="Version"
-                   HorizontalAlignment="Right"
-                   Foreground="{DynamicResource TextForegroundBrush}"/>
-            <Label x:Name="VersionLabel" Grid.Column="1" Grid.Row="2"
+            <Label x:Name="VersionLabel" Grid.Column="1" Grid.Row="3"
                    Content="Version"
                    HorizontalAlignment="Left"
                    Foreground="{DynamicResource TextForegroundBrush}"/>
