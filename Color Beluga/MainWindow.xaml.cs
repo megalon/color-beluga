@@ -60,7 +60,7 @@ namespace Color_Beluga
 
             ColorNames = new Dictionary<System.Drawing.Color, string>();
 
-            LoadColorDataResourceJSON("Standard");
+            LoadColorDataResourceJSON(Settings.Default.ColorSet);
 
             CheckBoxBlur.IsChecked = Settings.Default.BlurEnabled;
 
