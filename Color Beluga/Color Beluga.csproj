@@ -7,12 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Color_Beluga</RootNamespace>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>color-beluga-logo2.ico</ApplicationIcon>
+    <ApplicationIcon>color-beluga-logo.ico</ApplicationIcon>
     <Version>0.2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="color-beluga-logo2.ico" />
+    <Content Include="color-beluga-logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
