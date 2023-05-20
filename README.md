@@ -2,18 +2,15 @@
 
 https://github.com/megalon/color-beluga/assets/27714637/77be604f-b4a0-42c4-a594-4e11960b1995
 
-
 A color assistant app for Windows!
 
 ## FAQ
 
 ### What is this?
-Color Beluga is an accessibility app designed to help people with color deficient vision.
-
-It is designed to tell you the color under the mouse cursor at all times.
+Color Beluga is an accessibility app designed to tell you the color under the mouse cursor at all times.
 
 ### Is this a color picker?
-No, if you are looking for a color picker I suggest using [Windows Power Toys.](https://github.com/microsoft/PowerToys)
+No, if you are looking for a color picker I suggest using [Microsoft Power Toys.](https://github.com/microsoft/PowerToys)
 
 ## Usage
 
